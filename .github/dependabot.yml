@@ -1,0 +1,45 @@
+version: 2
+updates:
+  # npm (frontend)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Australia/Sydney"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "frontend"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      # Group all Radix UI updates into one PR
+      radix-ui:
+        patterns:
+          - "@radix-ui/*"
+      # Group all TanStack updates
+      tanstack:
+        patterns:
+          - "@tanstack/*"
+
+  # pip (backend)
+  - package-ecosystem: "pip"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Australia/Sydney"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "backend"
+    commit-message:
+      prefix: "chore(deps)"
+    # LangChain updates are high-risk — keep separate
+    groups:
+      langchain:
+        patterns:
+          - "langchain*"
