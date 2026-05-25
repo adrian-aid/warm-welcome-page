@@ -72,9 +72,14 @@ app = FastAPI(
 )
 
 # CORS — restrict to local frontend only (never use * in a banking demo)
+ALLOWED_ORIGINS = os.getenv(
+    "CORS_ORIGINS",
+    "http://localhost:8080,http://127.0.0.1:8080",
+).split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080", "http://127.0.0.1:8080"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
@@ -92,12 +97,14 @@ app.include_router(news.router)
 
 @app.get("/health", tags=["health"])
 async def health():
-    """Health check — confirms the API is running."""
+    """Health check — confirms the API is running and reports system state."""
+    from backend.agents.memory_store import memory_store
     demo = os.getenv("DEMO_MODE", "false").lower() == "true"
     groq_configured = bool(os.getenv("GROQ_API_KEY"))
     return {
         "status": "ok",
         "demo_mode": demo,
         "groq_configured": groq_configured,
-        "version": "1.0.0",
+        "version": "1.1.0",
+        "session_memory": memory_store.session_stats(),
     }

@@ -106,7 +106,12 @@ check: lint typecheck build ## Run all quality checks (lint + typecheck + build)
 clear-cache: ## Delete all cached data files (forces re-fetch on next backend start)
 	@echo "$(BOLD)Clearing data cache...$(RESET)"
 	rm -f backend/data/cache/*.csv backend/data/cache/*.xlsx backend/data/cache/*.xls backend/data/cache/_insights_cache.txt
-	@echo "$(GREEN)✓ Cache cleared$(RESET)"
+	@echo "$(GREEN)✓ Cache cleared — restart the backend to re-fetch all data$(RESET)"
+
+refresh-data: ## Force-refresh all live data (clears cache + triggers backend warm)
+	@echo "$(BOLD)Refreshing data from live sources...$(RESET)"
+	$(MAKE) clear-cache
+	@echo "$(AMBER)Restart the backend to re-fetch. Or if already running, it will refresh on next request.$(RESET)"
 
 # ─── Audit ────────────────────────────────────────────────────────────────────
 audit: ## Run security audits for both frontend and backend

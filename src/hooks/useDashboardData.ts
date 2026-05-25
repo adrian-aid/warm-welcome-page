@@ -5,6 +5,8 @@ import {
   getCPI,
   getEmployment,
   getGDP,
+  getRBASchedule,
+  getBudgetData,
 } from "@/services/api";
 
 const STALE_TIME = 5 * 60 * 1000; // 5 minutes
@@ -55,5 +57,23 @@ export function useGDP() {
     staleTime: STALE_TIME,
     retry: 2,
     select: (res) => res.data,
+  });
+}
+
+export function useRBASchedule() {
+  return useQuery({
+    queryKey: ["dashboard", "rba-schedule"],
+    queryFn: getRBASchedule,
+    staleTime: 60 * 60 * 1000, // 1 hour — schedule rarely changes
+    retry: 1,
+  });
+}
+
+export function useBudget() {
+  return useQuery({
+    queryKey: ["dashboard", "budget"],
+    queryFn: getBudgetData,
+    staleTime: 24 * 60 * 60 * 1000, // 24 hours — only changes at budget/MYEFO
+    retry: 1,
   });
 }

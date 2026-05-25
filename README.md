@@ -13,6 +13,8 @@ An end-to-end AI analytics platform demonstrating LLM-assisted financial data an
 | [User Guide](docs/USER_GUIDE.md) | All users | Setup, page guide, troubleshooting, FAQ |
 | [Engineering Guide](docs/ENGINEERING.md) | Engineers / managers | Architecture, ADRs, CI/CD, quality standards, production gap analysis |
 | [Legal & Boundaries](docs/LEGAL_AND_BOUNDARIES.md) | All users, legal | Disclaimers, data licences, privacy, IP, system boundaries |
+| [Hosting Guide](docs/HOSTING.md) | DevOps / developers | Free hosting on Vercel + Railway/Fly.io, Docker, env vars |
+| [Model Improvement](docs/MODEL_IMPROVEMENT.md) | ML engineers / managers | RAG pipeline, session memory, fine-tuning roadmap, evaluation |
 
 ---
 

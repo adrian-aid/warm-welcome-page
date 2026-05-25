@@ -15,6 +15,8 @@ import type {
   ChatMessage,
   ChatResponse,
   InsightsResponse,
+  RBASchedule,
+  BudgetData,
 } from "@/types/api";
 
 class ApiError extends Error {
@@ -77,15 +79,32 @@ export const getStockSummary = (): Promise<{ data: StockSummary[] }> =>
 export const getNews = (): Promise<{ data: NewsItem[] }> =>
   apiFetch<{ data: NewsItem[] }>("/api/news");
 
+// ─── RBA Schedule ─────────────────────────────────────────────────────────────
+
+export const getRBASchedule = (): Promise<RBASchedule> =>
+  apiFetch<RBASchedule>("/api/dashboard/rba-schedule");
+
+// ─── Budget ───────────────────────────────────────────────────────────────────
+
+export const getBudgetData = (): Promise<BudgetData> =>
+  apiFetch<BudgetData>("/api/dashboard/budget");
+
 // ─── AI Chat ──────────────────────────────────────────────────────────────────
 
 export const sendChatMessage = (
   message: string,
+  sessionId: string,
   history: ChatMessage[],
 ): Promise<ChatResponse> =>
   apiFetch<ChatResponse>("/api/chat", {
     method: "POST",
-    body: JSON.stringify({ message, history }),
+    body: JSON.stringify({ message, session_id: sessionId, history }),
+  });
+
+export const clearChatSession = (sessionId: string): Promise<void> =>
+  apiFetch<void>("/api/chat/clear", {
+    method: "POST",
+    body: JSON.stringify({ session_id: sessionId }),
   });
 
 // ─── Insights ─────────────────────────────────────────────────────────────────

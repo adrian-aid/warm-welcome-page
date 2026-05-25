@@ -1,0 +1,30 @@
+# Render deployment configuration
+# Docs: https://render.com/docs/infrastructure-as-code
+#
+# Deploy: Push this repo to GitHub, connect to Render,
+# and it will auto-detect this file.
+
+services:
+  # ─── Backend (FastAPI) ──────────────────────────────────────────────────────
+  - type: web
+    name: aus-banking-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free          # Render free tier (750 hrs/month; sleeps after 15min idle)
+    region: singapore   # Closest to Australia
+    healthCheckPath: /health
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false       # Set manually in Render dashboard — never commit this
+      - key: DEMO_MODE
+        value: "false"
+      - key: CORS_ORIGINS
+        value: "https://your-app.vercel.app,http://localhost:8080"
+      - key: PORT
+        value: "8000"
+    # Disk for persisting data cache between deploys (optional on free tier)
+    # disk:
+    #   name: data-cache
+    #   mountPath: /app/backend/data/cache
+    #   sizeGB: 1
