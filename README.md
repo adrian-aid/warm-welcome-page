@@ -1,73 +1,113 @@
-# Welcome to your Lovable project
+# AUS Banking Intelligence — Analytics Showcase
 
-## Project info
+An end-to-end AI analytics platform demonstrating LLM-assisted financial data analysis, built entirely on free Australian regulatory and market data sources. Built as a portfolio project for an analytics specialist role in Australian banking.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## What This Project Demonstrates
 
-## How can I edit this code?
+| Feature | Technology |
+|---|---|
+| Natural language data queries | LangChain `create_pandas_dataframe_agent` |
+| Executive insight generation | LangChain `LLMChain` + `PromptTemplate` |
+| Free LLM inference | Groq API — `llama-3.3-70b-versatile` |
+| Economic data visualisation | Recharts via shadcn/ui chart wrapper |
+| REST API | Python FastAPI |
+| Reactive frontend | React 18 + TypeScript + TanStack Query |
 
-There are several ways of editing your application.
+## Data Sources (all free)
 
-**Use Lovable**
+- **RBA** — Cash Rate Target history (rba.gov.au)
+- **ABS** — CPI, Employment, GDP via indicator.data.abs.gov.au JSON API
+- **APRA** — Monthly ADI balance sheet statistics (apra.gov.au)
+- **ASX** — Bank stock prices: WBC, CBA, NAB, ANZ, MQG via `yfinance`
+- **News** — RBA, APRA, ASIC and ABC Business RSS feeds
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Architecture
 
-Changes made via Lovable will be committed automatically to this repo.
+```
+┌─────────────────────────────────────┐
+│  React Frontend (Vite, port 8080)   │
+│  Dashboard │ AI Analyst │ Insights  │
+│  Banking Sector │ News Feed         │
+└──────────────┬──────────────────────┘
+               │ /api/* (Vite proxy)
+┌──────────────▼──────────────────────┐
+│  FastAPI Backend (Python, port 8000)│
+│  LangChain Agent + Insights Chain   │
+│  Data fetchers → local CSV cache    │
+└──────────────┬──────────────────────┘
+               │
+   ┌───────────┼────────────┐
+   ▼           ▼            ▼
+  RBA       ABS/APRA     Groq API
+ (Excel)   (JSON/Excel)  (Llama 3.3)
+```
 
-**Use your preferred IDE**
+## Setup
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Node.js 18+
+- Python 3.9+
+- Free [Groq API key](https://console.groq.com/) (takes 1 minute to register)
 
-Follow these steps:
+### 1. Frontend
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+```bash
+npm install
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 2. Backend
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+cd backend
+pip install -r requirements.txt
+cp .env.example .env
+# Edit .env and add your GROQ_API_KEY
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### 3. Run both services
+
+**Terminal 1 — Backend:**
+```bash
+cd backend
+uvicorn main:app --reload --port 8000
+```
+
+**Terminal 2 — Frontend:**
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Open http://localhost:8080
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Demo Mode (no API key needed)
 
-**Use GitHub Codespaces**
+Set `DEMO_MODE=true` in `backend/.env` to use pre-computed responses. The app will still show all charts and UI — only live LangChain calls are bypassed.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Pages
 
-## What technologies are used for this project?
+| Route | Description |
+|---|---|
+| `/` | Economic dashboard — KPI cards + RBA, CPI and employment charts |
+| `/analyst` | AI Data Analyst — LangChain agent chat over all datasets |
+| `/insights` | Insights generator — LLM produces Westpac-framed executive narrative |
+| `/banking` | Banking sector — APRA stats, ASX stock comparison, news feed |
 
-This project is built with:
+## Project Structure
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```
+warm-welcome-page/
+├── backend/              # Python FastAPI + LangChain
+│   ├── main.py
+│   ├── agents/           # LangChain agent + insights chain
+│   ├── data/fetchers/    # RBA, ABS, APRA, yfinance, news
+│   ├── routers/          # API endpoints
+│   └── utils/            # Groq LLM singleton
+├── src/                  # React TypeScript frontend
+│   ├── components/       # Navbar, charts, chat, insight card
+│   ├── hooks/            # TanStack Query + chat state hooks
+│   ├── pages/            # Dashboard, AIAnalyst, Insights, Banking
+│   ├── services/         # Typed API client
+│   └── types/            # API response TypeScript interfaces
+└── CLAUDE.md             # Development guidelines
+```

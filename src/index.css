@@ -1,78 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
-
 @layer base {
   :root {
-    --background: 30 50% 98%;
-    --foreground: 20 25% 20%;
+    /* Dark navy financial theme */
+    --background: 222 47% 9%;
+    --foreground: 210 40% 96%;
 
-    --card: 30 40% 97%;
-    --card-foreground: 20 25% 20%;
+    --card: 222 47% 12%;
+    --card-foreground: 210 40% 96%;
 
-    --popover: 30 40% 97%;
-    --popover-foreground: 20 25% 20%;
+    --popover: 222 47% 12%;
+    --popover-foreground: 210 40% 96%;
 
-    --primary: 15 80% 75%;
-    --primary-foreground: 20 25% 15%;
+    /* Gold accent — primary CTA colour */
+    --primary: 43 96% 56%;
+    --primary-foreground: 222 47% 8%;
 
-    --secondary: 340 35% 90%;
-    --secondary-foreground: 340 30% 30%;
+    --secondary: 217 33% 20%;
+    --secondary-foreground: 210 40% 85%;
 
-    --muted: 30 30% 94%;
-    --muted-foreground: 20 15% 45%;
+    --muted: 217 33% 16%;
+    --muted-foreground: 215 20% 55%;
 
-    --accent: 270 40% 92%;
-    --accent-foreground: 270 35% 35%;
+    --accent: 217 33% 20%;
+    --accent-foreground: 43 80% 80%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 30 25% 88%;
-    --input: 30 25% 88%;
-    --ring: 15 70% 70%;
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
+    --ring: 43 96% 56%;
 
-    --radius: 1rem;
+    --radius: 0.75rem;
 
-    /* Custom tokens */
-    --peach: 15 80% 75%;
-    --peach-light: 20 60% 92%;
-    --cream: 35 50% 95%;
-    --rose: 340 45% 85%;
-    --rose-dark: 340 40% 70%;
-    --lavender: 270 40% 88%;
-    --lavender-dark: 270 35% 75%;
-    --warm-white: 30 50% 99%;
-    
+    /* Custom tokens — remapped to gold/navy for financial theme */
+    /* Names are preserved so button variants in button.tsx still compile */
+    --peach: 43 96% 56%;           /* gold — was warm peach */
+    --peach-light: 43 50% 18%;     /* dark gold tint */
+    --cream: 222 47% 14%;          /* dark navy tint — was cream */
+    --rose: 217 33% 22%;           /* steel blue — was rose */
+    --rose-dark: 35 90% 50%;       /* amber — was rose-dark */
+    --lavender: 217 33% 20%;       /* dark slate — was lavender */
+    --lavender-dark: 217 33% 28%;  /* lighter slate */
+    --warm-white: 222 47% 13%;     /* card surface — was warm-white */
+
     /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(var(--peach-light)) 0%, hsl(var(--cream)) 50%, hsl(var(--lavender)) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(var(--warm-white)) 0%, hsl(var(--cream)) 100%);
-    --gradient-button: linear-gradient(135deg, hsl(var(--peach)) 0%, hsl(var(--rose-dark)) 100%);
-    
+    --gradient-hero: linear-gradient(135deg, hsl(222 47% 12%) 0%, hsl(222 47% 9%) 50%, hsl(217 33% 14%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(222 47% 13%) 0%, hsl(222 47% 10%) 100%);
+    --gradient-button: linear-gradient(135deg, hsl(43 96% 56%) 0%, hsl(35 90% 50%) 100%);
+
     /* Shadows */
-    --shadow-soft: 0 4px 20px -4px hsl(var(--peach) / 0.25);
-    --shadow-card: 0 8px 30px -8px hsl(var(--rose) / 0.2);
-    --shadow-button: 0 6px 20px -4px hsl(var(--rose-dark) / 0.35);
+    --shadow-soft: 0 4px 20px -4px hsl(43 96% 56% / 0.15);
+    --shadow-card: 0 8px 30px -8px hsl(0 0% 0% / 0.4);
+    --shadow-button: 0 6px 20px -4px hsl(43 96% 56% / 0.3);
   }
 
   .dark {
-    --background: 20 20% 10%;
-    --foreground: 30 30% 95%;
-    --card: 20 20% 12%;
-    --card-foreground: 30 30% 95%;
-    --primary: 15 70% 65%;
-    --primary-foreground: 20 20% 10%;
-    --secondary: 340 25% 25%;
-    --secondary-foreground: 340 30% 90%;
-    --muted: 20 15% 20%;
-    --muted-foreground: 30 20% 65%;
-    --accent: 270 30% 25%;
-    --accent-foreground: 270 35% 90%;
-    --border: 20 15% 20%;
-    --input: 20 15% 20%;
-    --ring: 15 60% 55%;
+    /* Same as :root — app always runs in dark mode */
+    --background: 222 47% 9%;
+    --foreground: 210 40% 96%;
+    --card: 222 47% 12%;
+    --card-foreground: 210 40% 96%;
+    --primary: 43 96% 56%;
+    --primary-foreground: 222 47% 8%;
+    --secondary: 217 33% 20%;
+    --secondary-foreground: 210 40% 85%;
+    --muted: 217 33% 16%;
+    --muted-foreground: 215 20% 55%;
+    --accent: 217 33% 20%;
+    --accent-foreground: 43 80% 80%;
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
+    --ring: 43 96% 56%;
   }
 }
 
@@ -86,7 +90,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display;
+    @apply font-sans;
   }
 }
 

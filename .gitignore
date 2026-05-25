@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python backend
+backend/.env
+backend/__pycache__/
+backend/**/__pycache__/
+backend/**/*.pyc
+backend/data/cache/*.csv
+backend/data/cache/*.xlsx
+backend/data/cache/*.xls
+backend/data/cache/_insights_cache.txt
+*.pyc
+__pycache__/
