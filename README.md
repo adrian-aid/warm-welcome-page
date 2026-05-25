@@ -119,15 +119,17 @@ See [Engineering Guide](docs/ENGINEERING.md) for full architecture diagrams, ADR
 ## Developer Commands
 
 ```bash
-make help        # All available targets
-make check       # lint + typecheck + build (run before pushing)
-make lint        # ESLint + Ruff
-make typecheck   # tsc + mypy
-make test        # pytest
-make build       # vite build
-make audit       # npm audit + pip-audit
-make clear-cache # Force data re-fetch on next backend start
-make clean       # Remove build artifacts
+make help         # All available targets
+make check        # lint + typecheck + build (run before pushing)
+make lint         # ESLint + Ruff
+make typecheck    # tsc + mypy
+make test         # pytest
+make build        # vite build
+make audit        # npm audit + pip-audit
+make clear-cache  # Delete cached files (re-fetched on next backend start)
+make refresh-cache # Live data refresh via API (backend must be running)
+make cache-status  # Show age + size of each cache file (backend must be running)
+make clean        # Remove build artifacts
 ```
 
 ---

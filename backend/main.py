@@ -86,13 +86,14 @@ app.add_middleware(
 )
 
 # Register routers
-from backend.routers import dashboard, chat, insights, banking, news  # noqa: E402
+from backend.routers import dashboard, chat, insights, banking, news, admin  # noqa: E402
 
 app.include_router(dashboard.router)
 app.include_router(chat.router)
 app.include_router(insights.router)
 app.include_router(banking.router)
 app.include_router(news.router)
+app.include_router(admin.router)
 
 
 @app.get("/health", tags=["health"])

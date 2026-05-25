@@ -459,8 +459,20 @@ curl http://localhost:8000/health
 # Check Vite proxy is configured
 grep -A 3 "proxy" vite.config.ts
 
-# Force data cache refresh (delete cached files)
-rm -f backend/data/cache/*.csv
+# Force data cache refresh — while backend is running (no restart needed)
+make refresh-cache              # refreshes all sources
+make cache-status               # shows age + size of each cache file
+
+# Or target a specific source (POST body is optional JSON {"sources": ["rba","cpi"]})
+curl -s -X POST http://localhost:8000/api/admin/refresh-cache \
+  -H "Content-Type: application/json" \
+  -d '{"sources": ["rba", "stocks"]}'
+
+# If ADMIN_SECRET is set, add the header:
+# -H "X-Admin-Key: your-secret"
+
+# Nuclear option: delete everything and restart
+rm -f backend/data/cache/*.csv backend/data/cache/_insights_cache.txt
 # Then restart backend — it will re-fetch on startup
 ```
 

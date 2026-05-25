@@ -2,7 +2,7 @@
 # Run `make help` to see all available targets.
 
 .DEFAULT_GOAL := help
-.PHONY: help dev backend frontend install lint typecheck test build clean
+.PHONY: help dev backend frontend install lint typecheck test build clean refresh-cache cache-status
 
 # ─── Colours ──────────────────────────────────────────────────────────────────
 BOLD  := \033[1m
@@ -112,6 +112,19 @@ refresh-data: ## Force-refresh all live data (clears cache + triggers backend wa
 	@echo "$(BOLD)Refreshing data from live sources...$(RESET)"
 	$(MAKE) clear-cache
 	@echo "$(AMBER)Restart the backend to re-fetch. Or if already running, it will refresh on next request.$(RESET)"
+
+refresh-cache: ## Call /api/admin/refresh-cache while backend is running (no restart needed)
+	@echo "$(BOLD)Calling live refresh endpoint...$(RESET)"
+	@curl -s -X POST "http://localhost:8000/api/admin/refresh-cache" \
+	     -H "Content-Type: application/json" \
+	     ${ADMIN_KEY:+-H "X-Admin-Key: $(ADMIN_KEY)"} \
+	     | python3 -m json.tool || echo "$(AMBER)Is the backend running? Try: make backend$(RESET)"
+
+cache-status: ## Show age and size of all cached data files (no restart needed)
+	@echo "$(BOLD)Cache file status:$(RESET)"
+	@curl -s "http://localhost:8000/api/admin/cache-status" \
+	     ${ADMIN_KEY:+-H "X-Admin-Key: $(ADMIN_KEY)"} \
+	     | python3 -m json.tool || echo "$(AMBER)Is the backend running? Try: make backend$(RESET)"
 
 # ─── Audit ────────────────────────────────────────────────────────────────────
 audit: ## Run security audits for both frontend and backend

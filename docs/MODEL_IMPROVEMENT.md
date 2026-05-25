@@ -161,30 +161,33 @@ excel_link = soup.find("a", href=lambda h: h and h.endswith(".xlsx"))
 
 ---
 
-## Improvement Area 2: Add Manual Data Refresh Endpoint (Short-term, 1 day)
+## Improvement Area 2: Manual Data Refresh Endpoint ✅ Implemented
 
-The current cache TTL is 24 hours. Add an admin endpoint to force a refresh:
+The cache TTL is 24h for macro data and 6h for stocks. The backend now exposes admin endpoints to force a refresh **without restarting the server**:
 
-```python
-# backend/routers/admin.py
-@router.post("/api/admin/refresh-cache")
-async def refresh_cache(token: str = Header(None)):
-    if token != os.getenv("ADMIN_TOKEN"):
-        raise HTTPException(403, "Forbidden")
-    # Delete all cache files and re-fetch
-    for f in CACHE_DIR.glob("*.csv"):
-        f.unlink()
-    fetch_cash_rate()
-    fetch_cpi()
-    # ... etc
-    return {"status": "refreshed"}
+```
+POST /api/admin/refresh-cache          # refresh all sources
+POST /api/admin/refresh-cache          # body: {"sources": ["rba","stocks"]}
+GET  /api/admin/cache-status           # show age + size of each cache file
 ```
 
-Add `make refresh-cache` target to Makefile:
+**Authentication:** Set `ADMIN_SECRET` in `backend/.env`. Pass it via `X-Admin-Key` header. If `ADMIN_SECRET` is unset (local dev default), the endpoints are open.
+
+**Developer shortcut:**
 ```bash
+make refresh-cache        # POST to /api/admin/refresh-cache (backend must be running)
+make cache-status         # GET  /api/admin/cache-status
+
+# With a secret key:
+ADMIN_KEY=your-secret make refresh-cache
+
+# Refresh specific sources only:
 curl -X POST http://localhost:8000/api/admin/refresh-cache \
-  -H "token: $(cat backend/.env | grep ADMIN_TOKEN | cut -d= -f2)"
+  -H "Content-Type: application/json" \
+  -d '{"sources": ["rba", "stocks"]}'
 ```
+
+The endpoint deletes the relevant cache files and immediately re-fetches from live sources. Response includes `{refreshed, skipped, errors, timestamp}` so you can confirm each source succeeded.
 
 ---
 
@@ -460,8 +463,8 @@ Fine-tuning a Llama model on Australian financial domain data would improve:
 
 | Priority | Action | Effort | Impact |
 |---|---|---|---|
-| 1 | Add `/api/admin/refresh-cache` endpoint | 2h | High — enables on-demand data updates |
-| 2 | Implement APRA live data fetch | 4h | High — replaces static snapshot |
+| ~~1~~ | ~~Add `/api/admin/refresh-cache` endpoint~~ | ~~2h~~ | ✅ Done — `make refresh-cache` / `make cache-status` |
+| 1 | Implement APRA live data fetch | 4h | High — replaces static snapshot |
 | 3 | Add thumbs up/down feedback UI | 4h | High — builds evaluation dataset |
 | 4 | Build FAISS index for RBA Statement on Monetary Policy | 1 day | High — grounds answers in policy documents |
 | 5 | Add Budget PDF to RAG index | 4h | Medium — adds fiscal context |
